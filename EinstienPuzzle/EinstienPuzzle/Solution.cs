@@ -8,12 +8,40 @@ namespace EinstienPuzzle
 {
     class Solution
     {
+        enum valueStatus
+        {
+            UNKNOWN,
+            FALSE,
+            TRUE
+        }
 
-        Character gulity;
+        valueStatus[,,] solutionTable;
 
-        List<Character> characters = new List<Character>();
-        List<Attribute> attributes = new List<Attribute>();
+        public void solve(Generator g)
+        {
+            g.generate();
 
+            solutionTable = new valueStatus[g.getAttributesCount(), g.getAttributesCount(), getNumberOfTables(g.getAttributesCount())];
+
+
+        }
+
+        public int getNumberOfTables(int size)
+        {
+            if(size > 1)
+            {
+                return size*size - getNumberOfTables(size - 1);
+            }
+            else
+            {
+                return 1;
+            }
+        }
+
+        public void printSolutionTable()
+        {
+
+        }
 
 
     }

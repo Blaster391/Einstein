@@ -16,13 +16,12 @@ namespace EinstienPuzzle
         List<Attribute> attributes = new List<Attribute>();
         AttributeValue[,] table;
 
-
-        public static int Main()
+        int test()
         {
             Generator g = new Generator();
- 
+
             g.generate();
-          
+
             Console.WriteLine("######SOLUTION TABLE#########");
             Console.WriteLine(" ");
 
@@ -107,12 +106,12 @@ namespace EinstienPuzzle
             this.targetAttribute = target;
         }
 
-        Character getTargetChar()
+        public Character getTargetChar()
         {
             return characters[getTargetCharIndex()];
         }
 
-        int getTargetCharIndex()
+        public int getTargetCharIndex()
         {
             int attributeIndex = 0;
             while (attributes[attributeIndex] != targetAttribute)
@@ -127,5 +126,14 @@ namespace EinstienPuzzle
             return charIndex;
         }
 
+        public int getCharactersCount()
+        {
+            return characters.Count();
+        }
+
+        public int getAttributesCount()
+        {
+            return attributes.Count();
+        }
     }
 }
