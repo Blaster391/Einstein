@@ -68,17 +68,24 @@ namespace EinstienPuzzle
 
             Attribute weapon = new Attribute();
             setTargetAttribute(weapon);
-            AttributeValue chainsaw = new AttributeValue(weapon, "Chainsaw");
+            AttributeValue chainsaw = new AttributeValue(weapon, "Rifle");
             AttributeValue axe = new AttributeValue(weapon, "Axe");
             AttributeValue knife = new AttributeValue(weapon, "Knife");
             attributes.Add(weapon);
 
-            Attribute hat= new Attribute();
-            setTargetAttribute(weapon);
+            Attribute hat = new Attribute();
             AttributeValue tophat = new AttributeValue(hat, "Top Hat");
             AttributeValue trilby = new AttributeValue(hat, "Trilby");
             AttributeValue beanie = new AttributeValue(hat, "Beanie");
             attributes.Add(hat);
+
+            
+            Attribute age = new Attribute();
+            AttributeValue age1 = new AttributeValue(age, "10");
+            AttributeValue age2 = new AttributeValue(age, "69");
+            AttributeValue age3 = new AttributeValue(age, "40");
+            attributes.Add(age);
+            
         }
 
         void generateTable()
@@ -124,6 +131,16 @@ namespace EinstienPuzzle
                 charIndex++;
             }
             return charIndex;
+        }
+
+        public Attribute getAttribute(int index)
+        {
+            return attributes[index];
+        }
+
+        public AttributeValue getAttributeValueFromTable(int x, int y)
+        {
+            return table[x, y];
         }
 
         public int getCharactersCount()
