@@ -46,6 +46,8 @@
     <Compile Include="Attribute.cs" />
     <Compile Include="AttributeValue.cs" />
     <Compile Include="Character.cs" />
+    <Compile Include="Clue.cs" />
+    <Compile Include="DirectClue.cs" />
     <Compile Include="IAttribute.cs" />
     <Compile Include="Generator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

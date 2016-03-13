@@ -22,5 +22,10 @@ namespace EinstienPuzzle
         {
             return description;
         }
+
+        public Attribute getAttribute()
+        {
+            return attribute;
+        }
     }
 }

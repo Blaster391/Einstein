@@ -12,6 +12,9 @@ namespace EinstienPuzzle
 
         Attribute targetAttribute;
         AttributeValue targetValue;
+
+        Attribute solutionAttribute;
+
         List<Character> characters = new List<Character>();
         List<Attribute> attributes = new List<Attribute>();
         AttributeValue[,] table;
@@ -42,6 +45,26 @@ namespace EinstienPuzzle
             return 0;
         }
 
+        public void printSolution()
+        {
+            Console.WriteLine("######GENERATED TABLE#########");
+            Console.WriteLine(" ");
+
+            for (int i = 0; i < attributes.Count; i++)
+            {
+                for (int j = 0; j < characters.Count; j++)
+                {
+                    Console.Write(table[i, j].getDescription() + "\t");
+                }
+                Console.WriteLine(" ");
+            }
+            Console.Beep();
+            Console.WriteLine(" ");
+            Console.WriteLine("Target is: " + targetValue.getDescription());
+            Console.WriteLine("Character Index is " + getTargetCharIndex());
+            Console.WriteLine(" ");
+        }
+
 
         public void generate() {
 
@@ -61,6 +84,7 @@ namespace EinstienPuzzle
             characters.Add(char3);
 
             Attribute name = new Attribute();
+            setSolutionAttribute(name);
             AttributeValue barry = new AttributeValue(name, "Barry");
             AttributeValue jeff = new AttributeValue(name, "Jeff");
             AttributeValue jacob = new AttributeValue(name, "Jacob");
@@ -108,6 +132,11 @@ namespace EinstienPuzzle
 
         }
 
+        void setSolutionAttribute(Attribute solution)
+        {
+            solutionAttribute = solution;
+        }
+
         void setTargetAttribute(Attribute target)
         {
             this.targetAttribute = target;
@@ -118,13 +147,10 @@ namespace EinstienPuzzle
             return characters[getTargetCharIndex()];
         }
 
+
         public int getTargetCharIndex()
         {
-            int attributeIndex = 0;
-            while (attributes[attributeIndex] != targetAttribute)
-            {
-                attributeIndex++;
-            }
+            int attributeIndex = getTargetAttributeIndex();
             int charIndex = 0;
             while (table[attributeIndex, charIndex] != targetValue)
             {
@@ -133,14 +159,46 @@ namespace EinstienPuzzle
             return charIndex;
         }
 
+        /*
+        public int getSolutionAttributeIndex()
+        {
+            return getAttributeIndex(solutionAttribute);
+        }*/
+
+        public AttributeValue getSolutionValue()
+        {
+            return getAttributeValueFromTable(0, getTargetCharIndex());
+        }
+
         public Attribute getAttribute(int index)
         {
             return attributes[index];
         }
 
+        public int getAttributeIndex(Attribute a) //TODO SAFTEY PROGRAMMING STOP INFINITE LOOPS WHEN I DO SHIT
+        {
+            int i = 0;
+            while(a != attributes[i])
+            {
+                i++;
+            }
+            return i;
+        }
+
         public AttributeValue getAttributeValueFromTable(int x, int y)
         {
             return table[x, y];
+        }
+
+        public int getAttributeValueIndexFromTable(AttributeValue val)
+        {
+            int x = getAttributeIndex(val.getAttribute());
+            int y = 0;
+            while(val != table[x, y])
+            {
+                y++;
+            }
+            return y;
         }
 
         public int getCharactersCount()
@@ -151,6 +209,21 @@ namespace EinstienPuzzle
         public int getAttributesCount()
         {
             return attributes.Count();
+        }
+
+        public AttributeValue getTargetValue()
+        {
+            return targetValue;
+        }
+
+        public int getTargetAttributeIndex()
+        {
+            int attributeIndex = 0;
+            while (attributes[attributeIndex] != targetAttribute)
+            {
+                attributeIndex++;
+            }
+            return attributeIndex;
         }
     }
 }

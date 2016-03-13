@@ -8,24 +8,33 @@ namespace EinstienPuzzle
 {
     class Solution
     {
-        enum valueStatus
+        public enum valueStatus
         {
             UNKNOWN,
             FALSE,
-            TRUE
+            TRUE,
+            SOLUTION,
+            UNDEFINED
         }
 
         valueStatus[,,] solutionTable;
         Generator gen = new Generator();
+        List<Clue> possibleClues = new List<Clue>();
 
         public void solve(Generator g)
         {
             gen = g;
-            gen.generate();
+            //gen.generate();
 
             solutionTable = new valueStatus[gen.getCharactersCount(), gen.getCharactersCount(), getNumberOfTables(gen.getAttributesCount())];
 
+            setSolution();
+        }
 
+        public void setSolution()
+        {
+
+            solutionTable[gen.getTargetAttributeIndex(), gen.getTargetCharIndex(), 0] = valueStatus.SOLUTION;
         }
 
         public int getNumberOfTables(int size)
@@ -82,8 +91,20 @@ namespace EinstienPuzzle
             }
         }
 
+        public valueStatus getStatusFromIndex(int x, int y, int z)
+        {
+            return solutionTable[x, y, z];
+        }
+
+        public valueStatus findRelationship(AttributeValue val1, AttributeValue val2)
+        {
+            return valueStatus.UNDEFINED; //TODO Define This
+        }
+
         public void printSolutionTable()
         {
+            Console.WriteLine("######SOLVER TABLE#########");
+            Console.WriteLine(" ");
             for (int k = 0; k < getNumberOfTables(gen.getAttributesCount()); k++)
             {
                 Console.Write("\t");
