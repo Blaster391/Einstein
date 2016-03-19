@@ -8,7 +8,7 @@ namespace EinstienPuzzle
 {
     class Test
     {
-        /*public static int Main()
+        public static int Main()
         {
             Solution s = new Solution();
             Generator g = new Generator();
@@ -25,6 +25,6 @@ namespace EinstienPuzzle
 
             Console.ReadLine();
             return 0;
-        }*/
+        }
     }
 }

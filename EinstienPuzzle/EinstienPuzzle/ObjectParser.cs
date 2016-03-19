@@ -17,7 +17,7 @@ namespace EinstienPuzzle {
     {
         
         /* Testing. */
-
+        /*
         public static int Main()
         {
 
@@ -27,7 +27,7 @@ namespace EinstienPuzzle {
 
             Console.ReadLine();
             return 0;
-        }
+        }*/
 
         /* Constants necessary for defaulting. */
 

@@ -159,11 +159,11 @@ namespace EinstienPuzzle
             return charIndex;
         }
 
-        /*
+        
         public int getSolutionAttributeIndex()
         {
             return getAttributeIndex(solutionAttribute);
-        }*/
+        }
 
         public AttributeValue getSolutionValue()
         {
