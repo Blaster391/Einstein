@@ -75,7 +75,7 @@ namespace Einstien
             //Initialize Starting Known Attribute
             foreach (var character in Characters)
             {
-                character.Possibilities[startingType] = new List<Attribute> {character.Attributes[startingType]};
+                character.Possibilities[startingType] = new List<Attribute> { character.Attributes[startingType] };
             }
             PrintCharacterPossibilities();
 
@@ -87,60 +87,63 @@ namespace Einstien
             var possibleClues = new List<Clue>();
             foreach (var character in Characters)
             {
-                var generatedTypes = new List<string>();
                 foreach (var i in character.Attributes.Keys)
                 {
-                    if (!generatedTypes.Contains(i))
+                    foreach (var j in character.Attributes.Keys)
                     {
-                        foreach (var j in character.Attributes.Keys)
+                        if (j != i)
                         {
-                            if (!generatedTypes.Contains(j) && (j != i))
+                            var clue = new Clue
                             {
-                                var clue = new Clue
-                                {
-                                    Val1 = character.Attributes[i],
-                                    Val2 = character.Attributes[j]
-                                };
-                                if (character == TargetCharacter && ((clue.Val1.Type == targetType && clue.Val2.Type == startingType) || (clue.Val2.Type == targetType && clue.Val1.Type == startingType)))
-                                {
-                                    clue.ClueType = ClueType.Solution;
-                                }
-                                else if ((character == TargetCharacter) &&
-                                          ((clue.Val1.Type == targetType && clue.Val2.Type != startingType) ||
-                                          (clue.Val2.Type == targetType && clue.Val1.Type != startingType) ||
-                                          (clue.Val1.Type != targetType && clue.Val2.Type == startingType) ||
-                                          (clue.Val2.Type != targetType && clue.Val1.Type == startingType)))
-                                {
-                                    clue.ClueType = ClueType.BuildOn;
-                                }
-                                else if ((character != TargetCharacter) &&
-                                          ((clue.Val1.Type == targetType && clue.Val2.Type != startingType) ||
-                                          (clue.Val2.Type == targetType && clue.Val1.Type != startingType) ||
-                                          (clue.Val1.Type != targetType && clue.Val2.Type == startingType) ||
-                                          (clue.Val2.Type != targetType && clue.Val1.Type == startingType)))
-                                {
-                                    clue.ClueType = ClueType.Indirect;
-                                }
-                                else if (character == TargetCharacter)
-                                {
-                                    clue.ClueType = ClueType.Attached;
-                                }
-                                else if (character != TargetCharacter &&
-                                         (clue.Val1.Type == targetType && clue.Val2.Type == startingType) ||
-                                         (clue.Val2.Type == targetType && clue.Val1.Type == startingType))
-                                {
-                                    clue.ClueType = ClueType.RuleOut;
-                                }
-                                else
-                                {
-                                    clue.ClueType = ClueType.Detached;
-                                }
-                                possibleClues.Add(clue);
+                                Val1 = character.Attributes[i],
+                                Val2 = character.Attributes[j]
+                            };
+                            if (character == TargetCharacter && ((clue.Val1.Type == targetType && clue.Val2.Type == startingType) || (clue.Val2.Type == targetType && clue.Val1.Type == startingType)))
+                            {
+                                clue.ClueType = ClueType.Solution;
                             }
-                            generatedTypes.Add(j);
+                            else if ((character == TargetCharacter) &&
+                                        ((clue.Val1.Type == targetType && clue.Val2.Type != startingType) ||
+                                        (clue.Val2.Type == targetType && clue.Val1.Type != startingType) ||
+                                        (clue.Val1.Type != targetType && clue.Val2.Type == startingType) ||
+                                        (clue.Val2.Type != targetType && clue.Val1.Type == startingType)))
+                            {
+                                clue.ClueType = ClueType.BuildOn;
+                            }
+                            else if ((character != TargetCharacter) &&
+                                        ((clue.Val1.Type == targetType && clue.Val2.Type != startingType) ||
+                                        (clue.Val2.Type == targetType && clue.Val1.Type != startingType) ||
+                                        (clue.Val1.Type != targetType && clue.Val2.Type == startingType) ||
+                                        (clue.Val2.Type != targetType && clue.Val1.Type == startingType)))
+                            {
+                                clue.ClueType = ClueType.Indirect;
+                            }
+                            else if (character == TargetCharacter)
+                            {
+                                clue.ClueType = ClueType.Attached;
+                            }
+                            else if (character != TargetCharacter &&
+                                        (clue.Val1.Type == targetType && clue.Val2.Type == startingType) ||
+                                        (clue.Val2.Type == targetType && clue.Val1.Type == startingType))
+                            {
+                                clue.ClueType = ClueType.RuleOut;
+                            }
+                            else
+                            {
+                                clue.ClueType = ClueType.Detached;
+                            }
+                            var duplicateCheck =
+                                possibleClues.Where(x => x.Val1.Type == clue.Val2.Type)
+                                    .Where(x => x.Val2.Type == clue.Val1.Type)
+                                    .Where(x => x.Val1.Name == clue.Val2.Name)
+                                    .Where(x => x.Val2.Name == clue.Val1.Name)
+                                    .ToList();
+                            if (duplicateCheck.Count == 0)
+                            {
+                            possibleClues.Add(clue);
+                            }
                         }
                     }
-                    generatedTypes.Add(i);
                 }
             }
 
@@ -173,70 +176,36 @@ namespace Einstien
                                 character.Possibilities[clue.Val2.Type].Remove(clue.Val2);
                             }
                         }
+                        else if(character.Possibilities[clue.Val1.Type].Count == 1)
+                        {
+                            character.Possibilities[clue.Val2.Type] = new List<Attribute>() {clue.Val2};
+                        }
+
+                        if (character.Possibilities[clue.Val2.Type].Contains(clue.Val2) == false)
+                        {
+                            if (character.Possibilities[clue.Val1.Type].Contains(clue.Val1))
+                            {
+                                character.Possibilities[clue.Val1.Type].Remove(clue.Val1);
+                            }
+                        }
+                        else if(character.Possibilities[clue.Val2.Type].Count == 1)
+                        {
+                            character.Possibilities[clue.Val1.Type] = new List<Attribute>() { clue.Val1 };
+                        }
                     }
                 }
 
             }
+
             PrintCharacterPossibilities();
-
-            //while (targetAttribute.Known == false && sentinel < 1000 && possibleClues.Count > 0) //TODO "while solution not found"
-            //{
-            //    int selectedClueIndex = _rnd.Next(possibleClues.Count);
-            //    if (possibleClues[selectedClueIndex].ClueType != ClueType.Solution)
-            //    {
-            //        Clues.Add(possibleClues[selectedClueIndex]);
-            //    }
-            //    possibleClues.RemoveAt(selectedClueIndex);
-
-            //    foreach (var clue in Clues)
-            //    {
-            //       // clue.Val1.Known = true;
-            //       // clue.Val2.Known = true;
-
-            //        //foreach (var type in typesDictionary.Values)
-            //        //{
-            //        //    if (type.Where(x => !x.Known).ToList().Count == 1)
-            //        //    {
-            //        //        type.First(x => !x.Known).Known = true;
-            //        //    }
-            //        //}
-
-            //        foreach (var character in Characters)
-            //        {
-
-            //        }
-
-            //        //var character = possibleCharacters.Where(x => x.Attributes.Any(x => x.Name == clue.Val1.Name && x.Type == clue.Val1.Type)).FirstOrDefault();
-            //        //character.Attributes()
-
-            //        //if (clue.ClueType == ClueType.Solution)
-            //        //{
-            //        //    //Ignore solution for now
-            //        //}
-            //        //else if (clue.ClueType == ClueType.RuleOut)
-            //        //{
-            //        //    var typeText = "";
-            //        //    var nameText = "";
-            //        //    if (clue.Val1.Type == startingType || clue.Val1.Type == targetType)
-            //        //    {
-            //        //        typeText = clue.Val1.Type;
-            //        //        nameText = clue.Val1.Name;
-            //        //    }
-            //        //    else
-            //        //    {
-            //        //        typeText = clue.Val2.Type;
-            //        //        nameText = clue.Val2.Name;
-            //        //    }
-            //        //    var charToRemove = possibleCharacters.Where(x => x.Attributes.Any(x => x.Name == nameText && x.Type == typeText)).FirstOrDefault();
-            //        //    possibleCharacters.Remove(charToRemove);
-            //        //}
-            //    }
-
-            //    sentinel++;
-            //}
-
             PrintCharacters();
+            Console.WriteLine("THE MURDER WEAPON WAS: " + targetAttribute.Name + "\n");
             PrintClues();
+
+            if (possibleClues.Count == 0)
+            {
+                Console.WriteLine("Failed!");
+            }
         }
 
         
