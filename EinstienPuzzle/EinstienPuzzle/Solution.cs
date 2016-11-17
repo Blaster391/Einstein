@@ -1,52 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EinstienPuzzle
 {
-    class Solution
+    internal class Solution
     {
-        public enum valueStatus
+        public enum ValueStatus
         {
-            UNKNOWN,
-            FALSE,
-            TRUE,
-            SOLUTION,
-            UNDEFINED
+            Unknown,
+            False,
+            True,
+            Solution,
+            Undefined
         }
 
-        valueStatus[,,] solutionTable;
-        Generator gen = new Generator();
-        List<Clue> possibleClues = new List<Clue>();
+        private Generator _gen = new Generator();
+        private List<Clue> _possibleClues = new List<Clue>();
 
-        public void solve(Generator g)
+        private ValueStatus[,,] _solutionTable;
+
+        public void Solve(Generator g)
         {
-            gen = g;
+            _gen = g;
             //gen.generate();
 
-            solutionTable = new valueStatus[gen.getCharactersCount(), gen.getCharactersCount(), getNumberOfTables(gen.getAttributesCount())];
+            _solutionTable =
+                new ValueStatus[_gen.GetCharactersCount(), _gen.GetCharactersCount(),
+                    GetNumberOfTables(_gen.GetAttributesCount())];
 
-            setSolution();
+            SetSolution();
+            GetDirectClues();
         }
 
-        public void setSolution()
+        public void SetSolution()
         {
-
-            solutionTable[gen.getTargetAttributeIndex(), gen.getTargetCharIndex(), 0] = valueStatus.SOLUTION;
+            _solutionTable[_gen.GetTargetAttributeIndex(), _gen.GetTargetCharIndex(), 0] = ValueStatus.Solution;
         }
 
-        public int getNumberOfTables(int size)
+        public void GetDirectClues()
         {
-            if(size <= 2)
-            {
+        }
+
+        public int GetNumberOfTables(int size)
+        {
+            if (size <= 2)
                 return 1;
-            }
-            else
-            {
-                return size - 1 + getNumberOfTables(size - 1); 
-            }
+            return size - 1 + GetNumberOfTables(size - 1);
         }
 
         /*Okay bear with me a sec, possible future me
@@ -55,80 +54,66 @@ namespace EinstienPuzzle
 
         Got it? Good because I don't either, YAY RECURSION
     */
-        public int getHorizonal(int x)
+
+        public int GetHorizonal(int x)
         {
-            return getHorizonal(x, gen.getAttributesCount());
+            return GetHorizonal(x, _gen.GetAttributesCount());
         }
 
-        public int getVertical(int x)
+        public int GetVertical(int x)
         {
-            return getVertical(x, gen.getAttributesCount());
+            return GetVertical(x, _gen.GetAttributesCount());
         }
 
-        public int getHorizonal(int x, int n)
+        public int GetHorizonal(int x, int n)
         {
-            if (x < (n-1))
-            {
+            if (x < n - 1)
                 return 0;
-            }
-            else
-            {
-                n--;
-                return getHorizonal(x - n, n) + 1;
-            }
+            n--;
+            return GetHorizonal(x - n, n) + 1;
         }
 
-        public int getVertical(int x, int n)
+        public int GetVertical(int x, int n)
         {
             if (x < n - 1)
             {
                 return x + 1;
             }
-            else
-            {
-                n--;
-                return getVertical(x - n, n) + 1;
-            }
+            n--;
+            return GetVertical(x - n, n) + 1;
         }
 
-        public valueStatus getStatusFromIndex(int x, int y, int z)
+        public ValueStatus GetStatusFromIndex(int x, int y, int z)
         {
-            return solutionTable[x, y, z];
+            return _solutionTable[x, y, z];
         }
 
-        public valueStatus findRelationship(AttributeValue val1, AttributeValue val2)
+        public ValueStatus FindRelationship(AttributeValue val1, AttributeValue val2)
         {
-
-            return valueStatus.UNDEFINED; //TODO Define This
+            return ValueStatus.Undefined; //TODO Define This
         }
 
-        public void printSolutionTable()
+        public void PrintSolutionTable()
         {
             Console.WriteLine("######SOLVER TABLE#########");
             Console.WriteLine(" ");
-            for (int k = 0; k < getNumberOfTables(gen.getAttributesCount()); k++)
+            for (var k = 0; k < GetNumberOfTables(_gen.GetAttributesCount()); k++)
             {
                 Console.Write("\t");
-                for (int l = 0; l < gen.getCharactersCount(); l++)
-                {
-                    Console.Write(gen.getAttributeValueFromTable(getVertical(k), l).getDescription() + "\t");
-                }
+                for (var l = 0; l < _gen.GetCharactersCount(); l++)
+                    Console.Write(_gen.GetAttributeValueFromTable(GetVertical(k), l).GetDescription() + "\t");
                 Console.WriteLine("");
 
-                for (int j = 0; j < gen.getCharactersCount(); j++)
+                for (var j = 0; j < _gen.GetCharactersCount(); j++)
                 {
-                    Console.Write(gen.getAttributeValueFromTable(getHorizonal(k), j).getDescription() + "\t");
-                    for (int i = 0; i < gen.getCharactersCount(); i++)
-                    {
-                        Console.Write(solutionTable[i, j, k] + " ");
-                    }
+                    Console.Write(_gen.GetAttributeValueFromTable(GetHorizonal(k), j).GetDescription() + "\t");
+                    for (var i = 0; i < _gen.GetCharactersCount(); i++)
+                        Console.Write(_solutionTable[i, j, k] + " ");
                     Console.WriteLine("");
                 }
                 Console.WriteLine(" ");
                 Console.Beep();
             }
         }
-
-
     }
 }
