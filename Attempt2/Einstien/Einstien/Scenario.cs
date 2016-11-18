@@ -160,19 +160,60 @@ namespace Einstien
 
             //Add clues until solvable
             int sentinel = 0;
+            int numberOfBuildOns = 0;
+            int numberOfRuleOuts = 0;
             Clues = new List<Clue>();
             var targetAttribute = TargetCharacter.Attributes.FirstOrDefault(x => x.Key == targetType).Value;
-            bool targetAttributeMentioned = false;
-            bool startingAttributeMentioned = false;
-            while ((!startingAttributeMentioned || !targetAttributeMentioned || TargetCharacter.Possibilities[targetType].Count > 1 || TargetCharacter.Possibilities[startingType].Count > 1) && sentinel < 1000 && possibleClues.Count > 0)
+            int targetAttributeMentioned = 0;
+            int startingAttributeMentioned = 0;
+            while (((startingAttributeMentioned < 2) || (targetAttributeMentioned < 2) || TargetCharacter.Possibilities[targetType].Count > 1 || TargetCharacter.Possibilities[startingType].Count > 1) && sentinel < 1000 && possibleClues.Count > 0)
             {
                 sentinel++;
                 int selectedClueIndex = _rnd.Next(possibleClues.Count);
                 var selectedClue = possibleClues[selectedClueIndex];
-                if (selectedClue.ClueType != ClueType.Solution)
+                bool addClue = true;
+                if (selectedClue.ClueType == ClueType.Solution)
                 {
-                    Clues.Add(possibleClues[selectedClueIndex]);
+                    addClue = false;
                 }
+                else if (selectedClue.ClueType == ClueType.BuildOn)
+                {
+                    if (numberOfBuildOns < 10) //TODO not a constant
+                    {
+                        numberOfBuildOns++;
+                    }
+                    else
+                    {
+                        addClue = false;
+                    }
+                }
+                else if (selectedClue.ClueType == ClueType.RuleOut)
+                {
+                    if (numberOfRuleOuts < 0)
+                    {
+                        numberOfRuleOuts++;
+                    }
+                    else
+                    {
+                        addClue = false;
+                    }
+                }
+
+                if (addClue)
+                {
+                    Clues.Add(selectedClue);
+
+                    if ((selectedClue.Val1.Type == startingType && selectedClue.Val1.Name == TargetCharacter.Attributes[startingType].Name) || (selectedClue.Val2.Type == startingType && selectedClue.Val2.Name == TargetCharacter.Attributes[startingType].Name))
+                    {
+                        startingAttributeMentioned++;
+                    }
+
+                    if ((selectedClue.Val1.Type == targetType && selectedClue.Val1.Name == TargetCharacter.Attributes[targetType].Name) || (selectedClue.Val2.Type == targetType && selectedClue.Val2.Name == TargetCharacter.Attributes[targetType].Name))
+                    {
+                        targetAttributeMentioned++;
+                    }
+                }
+
                 possibleClues.Remove(selectedClue);
 
                 
@@ -181,15 +222,6 @@ namespace Einstien
                     bool newChar = true;
                     foreach (var character in Characters)
                     {
-                        if ((clue.Val1.Type == startingType && clue.Val1.Name == TargetCharacter.Attributes[startingType].Name) || (clue.Val2.Type == startingType && clue.Val2.Name == TargetCharacter.Attributes[startingType].Name))
-                        {
-                            startingAttributeMentioned = true;
-                        }
-
-                        if ((clue.Val1.Type == targetType && clue.Val1.Name == TargetCharacter.Attributes[targetType].Name) || (clue.Val2.Type == targetType && clue.Val2.Name == TargetCharacter.Attributes[targetType].Name))
-                        {
-                            targetAttributeMentioned = true;
-                        }
 
                         if (character.Possibilities[clue.Val1.Type].Contains(clue.Val1) == false)
                         {
@@ -240,6 +272,8 @@ namespace Einstien
                 }
 
             }
+            //Shuffle the clues again
+            possibleClues = possibleClues.OrderBy(item => _rnd.Next()).ToList();
 
             //PrintCharacterPossibilities();
             //PrintCharacters();
