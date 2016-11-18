@@ -16,6 +16,7 @@ namespace Einstien
         public string TargetType { get; set; }
         public string StartingType { get; set; }
         public Dictionary<string, List<Attribute>> AttributesDictionary = new Dictionary<string, List<Attribute>>();
+        public int TotalPossibleAttributes { get; set; }
 
         public void GenerateCharacters(List<Attribute> attributes, int numOfCharacters, string startingType, string targetType)
         {
@@ -26,7 +27,7 @@ namespace Einstien
             var distinctTypes = attributes.Select(x => x.Type).Distinct();
             Dictionary<string, List<Attribute>> typesDictionary = distinctTypes.ToDictionary(type => type, type => attributes.Where(x => x.Type == type).ToList());
 
-            PrintPossibleAttributes(typesDictionary);
+            //PrintPossibleAttributes(typesDictionary);
 
             //Generate characters with random attributes
             Characters = new List<Character>();
@@ -59,7 +60,14 @@ namespace Einstien
                     }
                 }
             }
-            PrintAttributesTable();
+            //PrintAttributesTable();
+
+            //Calaculate Total Possible Attributes for each character
+            TotalPossibleAttributes = 0;
+            foreach (var attribute in AttributesDictionary.Values)
+            {
+                TotalPossibleAttributes += attribute.Count;
+            }
 
             //Initialize Elimination Table - Each character has default values
             foreach (var character in Characters)
@@ -77,7 +85,7 @@ namespace Einstien
             {
                 character.Possibilities[startingType] = new List<Attribute> { character.Attributes[startingType] };
             }
-            PrintCharacterPossibilities();
+            //PrintCharacterPossibilities();
 
             //Select Target Character
             int targetCharacterIndex = _rnd.Next(numOfCharacters);
@@ -147,14 +155,16 @@ namespace Einstien
                 }
             }
 
-            PrintCharacters();
-            PrintListOfClues(possibleClues);
+            //PrintCharacters();
+            //PrintListOfClues(possibleClues);
 
             //Add clues until solvable
             int sentinel = 0;
             Clues = new List<Clue>();
             var targetAttribute = TargetCharacter.Attributes.FirstOrDefault(x => x.Key == targetType).Value;
-            while (TargetCharacter.Possibilities[targetType].Count > 1 && sentinel < 1000 && possibleClues.Count > 0)
+            bool targetAttributeMentioned = false;
+            bool startingAttributeMentioned = false;
+            while ((!startingAttributeMentioned || !targetAttributeMentioned || TargetCharacter.Possibilities[targetType].Count > 1 || TargetCharacter.Possibilities[startingType].Count > 1) && sentinel < 1000 && possibleClues.Count > 0)
             {
                 sentinel++;
                 int selectedClueIndex = _rnd.Next(possibleClues.Count);
@@ -165,20 +175,34 @@ namespace Einstien
                 }
                 possibleClues.Remove(selectedClue);
 
+                
                 foreach (var clue in Clues)
                 {
+                    bool newChar = true;
                     foreach (var character in Characters)
                     {
+                        if ((clue.Val1.Type == startingType && clue.Val1.Name == TargetCharacter.Attributes[startingType].Name) || (clue.Val2.Type == startingType && clue.Val2.Name == TargetCharacter.Attributes[startingType].Name))
+                        {
+                            startingAttributeMentioned = true;
+                        }
+
+                        if ((clue.Val1.Type == targetType && clue.Val1.Name == TargetCharacter.Attributes[targetType].Name) || (clue.Val2.Type == targetType && clue.Val2.Name == TargetCharacter.Attributes[targetType].Name))
+                        {
+                            targetAttributeMentioned = true;
+                        }
+
                         if (character.Possibilities[clue.Val1.Type].Contains(clue.Val1) == false)
                         {
                             if (character.Possibilities[clue.Val2.Type].Contains(clue.Val2))
                             {
                                 character.Possibilities[clue.Val2.Type].Remove(clue.Val2);
+                                newChar = false;
                             }
                         }
                         else if(character.Possibilities[clue.Val1.Type].Count == 1)
                         {
                             character.Possibilities[clue.Val2.Type] = new List<Attribute>() {clue.Val2};
+                            newChar = false;
                         }
 
                         if (character.Possibilities[clue.Val2.Type].Contains(clue.Val2) == false)
@@ -186,19 +210,39 @@ namespace Einstien
                             if (character.Possibilities[clue.Val1.Type].Contains(clue.Val1))
                             {
                                 character.Possibilities[clue.Val1.Type].Remove(clue.Val1);
+                                newChar = false;
                             }
                         }
                         else if(character.Possibilities[clue.Val2.Type].Count == 1)
                         {
                             character.Possibilities[clue.Val1.Type] = new List<Attribute>() { clue.Val1 };
+                            newChar = false;
                         }
                     }
+
+                    //if (newChar)
+                    //{
+                    //    foreach(var character in Characters)
+                    //    {
+                    //        var count = 0;
+                    //        foreach(var possibility in character.Possibilities.Values)
+                    //        {
+                    //            count += possibility.Count;
+                    //        }
+                    //        if(count == TotalPossibleAttributes)
+                    //        {
+                    //            character.Possibilities[clue.Val1.Type] = new List<Attribute>() { clue.Val1 };
+                    //            character.Possibilities[clue.Val2.Type] = new List<Attribute>() { clue.Val2 };
+                    //            break;
+                    //        }
+                    //    }
+                    //}
                 }
 
             }
 
-            PrintCharacterPossibilities();
-            PrintCharacters();
+            //PrintCharacterPossibilities();
+            //PrintCharacters();
             Console.WriteLine("THE MURDER WEAPON WAS: " + targetAttribute.Name + "\n");
             PrintClues();
 
@@ -287,7 +331,7 @@ namespace Einstien
             Console.WriteLine("###CLUES###");
             foreach (var clue in Clues)
             {
-                Console.WriteLine(clue.Val1.Type + " - " + clue.Val1.Name + " has " + clue.Val2.Type + " - " + clue.Val2.Name);
+                Console.WriteLine("The person with a " + clue.Val1.Type + " of " + clue.Val1.Name + " has a " + clue.Val2.Type + " of " + clue.Val2.Name);
             }
         }
     }

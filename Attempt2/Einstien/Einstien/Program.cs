@@ -119,6 +119,20 @@ namespace Einstien
 
             var scenario = new Scenario();
             scenario.GenerateCharacters(attributes, 3, "Name", "Weapon");
+            bool solved = false;
+            while (!solved)
+            {
+                var input = Console.ReadLine();
+                if(input == scenario.TargetCharacter.Attributes["Name"].Name)
+                {
+                    Console.WriteLine("CORRECT");
+                    solved = true;
+                }
+                else
+                {
+                    Console.WriteLine("WRONG TRY AGAIN");
+                }
+            }
             Console.ReadLine();
         }
     }
