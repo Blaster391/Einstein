@@ -38,6 +38,12 @@ namespace Einstien
                 },
                 new Attribute()
                 {
+                    Type = "Name",
+                    Name = "Sam",
+                    Description = "Not blind"
+                },
+                new Attribute()
+                {
                     Type = "Age",
                     Name = "10",
                     Description = "blah"
@@ -62,8 +68,26 @@ namespace Einstien
                 },
                 new Attribute()
                 {
+                    Type = "Age",
+                    Name = "65",
+                    Description = "blah"
+                },
+                new Attribute()
+                {
+                    Type = "Age",
+                    Name = "30",
+                    Description = "blah"
+                },
+                new Attribute()
+                {
                     Type = "Weapon",
                     Name = "Knife",
+                    Description = "blah"
+                },
+                new Attribute()
+                {
+                    Type = "Weapon",
+                    Name = "Lead Pipe",
                     Description = "blah"
                 }
                 ,
@@ -82,19 +106,25 @@ namespace Einstien
                 new Attribute()
                 {
                     Type = "Hair Colour",
-                    Name = "Red",
+                    Name = "Blonde",
                     Description = "blah"
                 },
                 new Attribute()
                 {
                     Type = "Hair Colour",
-                    Name = "Green",
+                    Name = "Grey",
                     Description = "blah"
                 },
                 new Attribute()
                 {
                     Type = "Hair Colour",
-                    Name = "Blue",
+                    Name = "Black",
+                    Description = "blah"
+                },
+                new Attribute()
+                {
+                    Type = "Hair Colour",
+                    Name = "Brown",
                     Description = "blah"
                 },
                 new Attribute()
@@ -114,11 +144,23 @@ namespace Einstien
                     Type = "Nationality",
                     Name = "Irish",
                     Description = "blah"
+                },
+                new Attribute()
+                {
+                    Type = "Nationality",
+                    Name = "American",
+                    Description = "blah"
+                },
+                new Attribute()
+                {
+                    Type = "Nationality",
+                    Name = "German",
+                    Description = "blah"
                 }
             };
 
             var scenario = new Scenario();
-            scenario.GenerateCharacters(attributes, 3, "Name", "Weapon");
+            scenario.GenerateCharacters(attributes, 4, "Name", "Weapon");
             bool solved = false;
             while (!solved)
             {

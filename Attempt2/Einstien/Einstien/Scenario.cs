@@ -189,7 +189,7 @@ namespace Einstien
                 }
                 else if (selectedClue.ClueType == ClueType.RuleOut)
                 {
-                    if (numberOfRuleOuts < 0)
+                    if (numberOfRuleOuts < 1)
                     {
                         numberOfRuleOuts++;
                     }
