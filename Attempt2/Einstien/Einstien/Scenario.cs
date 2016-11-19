@@ -166,7 +166,7 @@ namespace Einstien
             var targetAttribute = TargetCharacter.Attributes.FirstOrDefault(x => x.Key == targetType).Value;
             int targetAttributeMentioned = 0;
             int startingAttributeMentioned = 0;
-            while (((startingAttributeMentioned < 2) || (targetAttributeMentioned < 2) || TargetCharacter.Possibilities[targetType].Count > 1 || TargetCharacter.Possibilities[startingType].Count > 1) && sentinel < 1000 && possibleClues.Count > 0)
+            while (((startingAttributeMentioned == 0) || (targetAttributeMentioned == 0) || TargetCharacter.Possibilities[targetType].Count > 1 || TargetCharacter.Possibilities[startingType].Count > 1) && sentinel < 1000 && possibleClues.Count > 0)
             {
                 sentinel++;
                 int selectedClueIndex = _rnd.Next(possibleClues.Count);
@@ -178,11 +178,47 @@ namespace Einstien
                 }
                 else if (selectedClue.ClueType == ClueType.BuildOn)
                 {
-                    if (numberOfBuildOns < 10) //TODO not a constant
-                    {
+                    if (numberOfBuildOns == 0) //TODO not a constant
+                    { 
                         numberOfBuildOns++;
                     }
-                    else
+                    else if(startingAttributeMentioned == 0 || targetAttributeMentioned == 0)
+                    {
+                        if(startingAttributeMentioned == 0)
+                        {
+                            if(selectedClue.Val1.Type == startingType)
+                            {
+                                numberOfBuildOns++;
+                            }
+                            else if (selectedClue.Val2.Type == startingType)
+                            {
+                                numberOfBuildOns++;
+                            }
+                            else
+                            {
+                                addClue = false;
+                            }
+                        }
+                        else if(targetAttributeMentioned == 0)
+                        {
+                            if (selectedClue.Val1.Type == targetType)
+                            {
+                                numberOfBuildOns++;
+                            }
+                            else if (selectedClue.Val2.Type == targetType)
+                            {
+                                numberOfBuildOns++;
+                            }
+                            else
+                            {
+                                addClue = false;
+                            }
+                        }
+                        else
+                        {
+                            addClue = false;
+                        }
+                    }else
                     {
                         addClue = false;
                     }
