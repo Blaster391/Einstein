@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
+using Einstein.Contracts.Objects;
+using Attribute = Einstein.Contracts.Objects.Attribute;
 
 namespace Einstien
 {
-    class Scenario
+    public class Scenario
     {
-        private static Random _rnd = new Random();
+        private static readonly Random Rnd = new Random();
         public Character TargetCharacter { get; set; }
         public List<Character> Characters { get; set; }
         public List<Clue> Clues { get; set; }
@@ -36,7 +35,7 @@ namespace Einstien
                 var character = new Character {Attributes = new Dictionary<string, Attribute>()};
                 foreach (string type in typesDictionary.Keys)
                 {
-                    var index = _rnd.Next(typesDictionary[type].Count);
+                    var index = Rnd.Next(typesDictionary[type].Count);
                     character.Attributes.Add( type,typesDictionary[type][index]);
                     typesDictionary[type].RemoveAt(index);
                 }
@@ -88,7 +87,7 @@ namespace Einstien
             //PrintCharacterPossibilities();
 
             //Select Target Character
-            int targetCharacterIndex = _rnd.Next(numOfCharacters);
+            int targetCharacterIndex = Rnd.Next(numOfCharacters);
             TargetCharacter = Characters[targetCharacterIndex];
 
             //Generate a list of all possible clues
@@ -171,7 +170,7 @@ namespace Einstien
             while (((startingAttributeMentioned == 0) || (targetAttributeMentioned == 0) || TargetCharacter.Possibilities[targetType].Count > 1 || TargetCharacter.Possibilities[startingType].Count > 1 || mentionedStartingTypes.Count != AttributesDictionary[startingType].Count || mentionedTargetTypes.Count != AttributesDictionary[targetType].Count) && sentinel < 1000 && possibleClues.Count > 0)
             {
                 sentinel++;
-                int selectedClueIndex = _rnd.Next(possibleClues.Count);
+                int selectedClueIndex = Rnd.Next(possibleClues.Count);
                 var selectedClue = possibleClues[selectedClueIndex];
                 bool addClue = true;
                 if (selectedClue.ClueType == ClueType.Solution)
@@ -353,7 +352,7 @@ namespace Einstien
 
             }
             //Shuffle the clues again
-            possibleClues = possibleClues.OrderBy(item => _rnd.Next()).ToList();
+            possibleClues = possibleClues.OrderBy(item => Rnd.Next()).ToList();
 
             //PrintCharacterPossibilities();
             //PrintCharacters();

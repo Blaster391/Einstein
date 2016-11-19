@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7F9774CC-2B80-4C92-B35A-7D263EA9A6FF}</ProjectGuid>
+    <ProjectGuid>{D1532AB2-E3AC-4562-97DA-A9D28D5A0FCF}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Einstien</RootNamespace>
-    <AssemblyName>Einstien</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <RootNamespace>Einstein.Core.Test</RootNamespace>
+    <AssemblyName>Einstein.Core.Test</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
@@ -43,15 +43,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attribute.cs" />
-    <Compile Include="Character.cs" />
-    <Compile Include="Clue.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scenario.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Einstein.Contracts\Einstein.Contracts.csproj">
+      <Project>{b965e64e-b8cd-46bb-94da-749795f833dc}</Project>
+      <Name>Einstein.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Einstien\Einstein.Core.csproj">
+      <Project>{7f9774cc-2b80-4c92-b35a-7d263ea9a6ff}</Project>
+      <Name>Einstein.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

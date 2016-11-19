@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Einstien;
+using Attribute = Einstein.Contracts.Objects.Attribute;
 
-namespace Einstien
+namespace Einstein.Core.Test
 {
     class Program
     {

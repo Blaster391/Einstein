@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Einstien
+﻿namespace Einstein.Contracts.Objects
 {
-    enum ClueType
+    public enum ClueType
     {
         Unknown,
         Solution,
@@ -17,7 +11,7 @@ namespace Einstien
         Detached
     }
 
-    class Clue
+    public class Clue
     {
         public Attribute Val1 { get; set; }
         public Attribute Val2 { get; set; }

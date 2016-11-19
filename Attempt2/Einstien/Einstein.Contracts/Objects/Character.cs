@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace Einstien
+namespace Einstein.Contracts.Objects
 {
-    class Character
+    public class Character
     {
         public Dictionary<string,Attribute> Attributes { get; set; }
         public Dictionary<string, List<Attribute>> Possibilities { get; set; }
