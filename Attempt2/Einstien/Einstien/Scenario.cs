@@ -166,7 +166,9 @@ namespace Einstien
             var targetAttribute = TargetCharacter.Attributes.FirstOrDefault(x => x.Key == targetType).Value;
             int targetAttributeMentioned = 0;
             int startingAttributeMentioned = 0;
-            while (((startingAttributeMentioned == 0) || (targetAttributeMentioned == 0) || TargetCharacter.Possibilities[targetType].Count > 1 || TargetCharacter.Possibilities[startingType].Count > 1) && sentinel < 1000 && possibleClues.Count > 0)
+            List<Attribute> mentionedStartingTypes = new List<Attribute>();
+            List<Attribute> mentionedTargetTypes = new List<Attribute>();
+            while (((startingAttributeMentioned == 0) || (targetAttributeMentioned == 0) || TargetCharacter.Possibilities[targetType].Count > 1 || TargetCharacter.Possibilities[startingType].Count > 1 || mentionedStartingTypes.Count != AttributesDictionary[startingType].Count || mentionedTargetTypes.Count != AttributesDictionary[targetType].Count) && sentinel < 1000 && possibleClues.Count > 0)
             {
                 sentinel++;
                 int selectedClueIndex = _rnd.Next(possibleClues.Count);
@@ -239,14 +241,56 @@ namespace Einstien
                 {
                     Clues.Add(selectedClue);
 
-                    if ((selectedClue.Val1.Type == startingType && selectedClue.Val1.Name == TargetCharacter.Attributes[startingType].Name) || (selectedClue.Val2.Type == startingType && selectedClue.Val2.Name == TargetCharacter.Attributes[startingType].Name))
+                    if (selectedClue.Val1.Type == startingType)
                     {
-                        startingAttributeMentioned++;
+                        if (!mentionedStartingTypes.Contains(selectedClue.Val1))
+                        {
+                            mentionedStartingTypes.Add(selectedClue.Val1);
+                        }
+
+                        if (selectedClue.Val1.Name == TargetCharacter.Attributes[startingType].Name)
+                        {
+                            startingAttributeMentioned++;
+                        }
                     }
 
-                    if ((selectedClue.Val1.Type == targetType && selectedClue.Val1.Name == TargetCharacter.Attributes[targetType].Name) || (selectedClue.Val2.Type == targetType && selectedClue.Val2.Name == TargetCharacter.Attributes[targetType].Name))
+                    if (selectedClue.Val2.Type == startingType) 
                     {
-                        targetAttributeMentioned++;
+                        if (!mentionedStartingTypes.Contains(selectedClue.Val2))
+                        {
+                            mentionedStartingTypes.Add(selectedClue.Val2);
+                        }
+
+                        if (selectedClue.Val2.Name == TargetCharacter.Attributes[startingType].Name)
+                        {
+                            startingAttributeMentioned++;
+                        }
+                    }
+
+                    if (selectedClue.Val1.Type == targetType)
+                    {
+                        if (!mentionedTargetTypes.Contains(selectedClue.Val1))
+                        {
+                            mentionedTargetTypes.Add(selectedClue.Val1);
+                        }
+
+                        if (selectedClue.Val1.Name == TargetCharacter.Attributes[targetType].Name)
+                        {
+                            targetAttributeMentioned++;
+                        }
+                    }
+
+                    if (selectedClue.Val2.Type == targetType)
+                    {
+                        if (!mentionedTargetTypes.Contains(selectedClue.Val2))
+                        {
+                            mentionedTargetTypes.Add(selectedClue.Val2);
+                        }
+
+                        if (selectedClue.Val2.Name == TargetCharacter.Attributes[targetType].Name)
+                        {
+                            targetAttributeMentioned++;
+                        }
                     }
                 }
 
