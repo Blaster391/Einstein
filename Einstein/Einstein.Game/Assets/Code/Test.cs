@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Einstein.Contracts.Objects;
-using Einstien;
+using Einstein.Core;
 
 public class Test : MonoBehaviour {
 

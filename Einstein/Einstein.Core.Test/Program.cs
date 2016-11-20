@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Einstien;
 using Attribute = Einstein.Contracts.Objects.Attribute;
 
 namespace Einstein.Core.Test

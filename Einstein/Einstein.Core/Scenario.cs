@@ -4,7 +4,7 @@ using System.Linq;
 using Einstein.Contracts.Objects;
 using Attribute = Einstein.Contracts.Objects.Attribute;
 
-namespace Einstien
+namespace Einstein.Core
 {
     public class Scenario
     {
